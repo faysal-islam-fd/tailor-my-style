@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState, useEffect } from 'react'
+import { useMemo, useState, useEffect, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -24,7 +24,7 @@ interface GarmentOption {
   estimatedTime: string
 }
 
-export default function DesignPage() {
+function DesignPageInner() {
   const router = useRouter()
   const search = useSearchParams()
   const [language, setLanguage] = useState<'en' | 'bn'>('en')
@@ -175,6 +175,13 @@ export default function DesignPage() {
     return garmentOptions.find(g => g.id === selectedGarment)
   }
 
+  const incrementStep = (step: 1 | 2 | 3 | 4 | 5): 1 | 2 | 3 | 4 | 5 => {
+    if (step === 1) return 2
+    if (step === 2) return 3
+    if (step === 3) return 4
+    return step
+  }
+
   return (
     <div className="min-h-screen bg-background py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -245,7 +252,7 @@ export default function DesignPage() {
                 <div className="text-sm"><span className="font-semibold">Fabric:</span> {selectedFabric ?? '—'}</div>
                 <div className="text-sm"><span className="font-semibold">Style:</span> {selectedStyle ?? '—'}</div>
                 <div className="text-sm"><span className="font-semibold">Accents:</span> {selectedAccent ?? '—'}</div>
-                <Button className="w-full mt-2" onClick={() => setCurrentStep((s) => (s < 4 ? ((s + 1) as any) : s))}>next</Button>
+                <Button className="w-full mt-2" onClick={() => setCurrentStep((s) => incrementStep(s))}>next</Button>
               </div>
             </aside>
           </div>
@@ -386,5 +393,13 @@ export default function DesignPage() {
         )}
       </div>
     </div>
+  )
+}
+
+export default function DesignPage() {
+  return (
+    <Suspense fallback={null}>
+      <DesignPageInner />
+    </Suspense>
   )
 }

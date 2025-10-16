@@ -135,7 +135,7 @@ export default function CustomerReviews({ language = 'en' }: CustomerReviewsProp
                       </div>
                     </div>
                     <p className="text-xs text-muted-foreground line-clamp-3 leading-relaxed">
-                      "{review.comment}"
+                      &ldquo;{review.comment}&rdquo;
                     </p>
                   </div>
                 </div>
