@@ -30,9 +30,9 @@ export default function TrendingCategories({ language = 'en' }: TrendingCategori
   const currentContent = content[language]
 
   return (
-    <section className="py-12 bg-gray-50">
+    <section className="py-12 bg-secondary">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-10">
+        <h2 className="text-3xl md:text-4xl font-bold text-center bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent mb-10">
           {currentContent.title}
         </h2>
 

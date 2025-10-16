@@ -22,10 +22,10 @@ export default function SustainabilitySection({ language = 'en' }: Sustainabilit
   const currentContent = content[language]
 
   return (
-    <section className="py-24 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
+    <section className="py-24 bg-gradient-to-b from-secondary to-background relative overflow-hidden">
       {/* Decorative elements */}
-      <div className="absolute top-20 left-0 w-72 h-72 bg-green-100 rounded-full blur-3xl opacity-20"></div>
-      <div className="absolute bottom-20 right-0 w-96 h-96 bg-blue-100 rounded-full blur-3xl opacity-20"></div>
+      <div className="absolute top-20 left-0 w-72 h-72 bg-primary rounded-full blur-3xl opacity-5"></div>
+      <div className="absolute bottom-20 right-0 w-96 h-96 bg-accent rounded-full blur-3xl opacity-5"></div>
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -53,7 +53,7 @@ export default function SustainabilitySection({ language = 'en' }: Sustainabilit
             <div className="inline-block px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm font-semibold mb-6">
               Sustainable Fashion
             </div>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-400 mb-6 leading-tight">
               {currentContent.title}
             </h2>
             <p className="text-xl text-gray-600 mb-10 leading-relaxed">

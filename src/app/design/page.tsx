@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -24,9 +25,14 @@ interface GarmentOption {
 }
 
 export default function DesignPage() {
+  const router = useRouter()
+  const search = useSearchParams()
   const [language, setLanguage] = useState<'en' | 'bn'>('en')
   const [selectedGarment, setSelectedGarment] = useState<string | null>(null)
-  const [currentStep, setCurrentStep] = useState(1)
+  const [currentStep, setCurrentStep] = useState<1 | 2 | 3 | 4 | 5>(1)
+  const [selectedFabric, setSelectedFabric] = useState<string | null>(null)
+  const [selectedStyle, setSelectedStyle] = useState<string | null>(null)
+  const [selectedAccent, setSelectedAccent] = useState<string | null>(null)
 
   const garmentOptions: GarmentOption[] = [
     {
@@ -124,17 +130,45 @@ export default function DesignPage() {
 
   const currentContent = content[language]
 
+  // Mock fabrics/styles/accents (can be replaced with API later)
+  const fabrics = useMemo(() => ([
+    { id: 'oxford-white', name: 'Oxford White', hex: '#F5F6F7', gsm: 140 },
+    { id: 'poplin-sky', name: 'Poplin Sky', hex: '#CFE6FF', gsm: 120 },
+    { id: 'twill-navy', name: 'Twill Navy', hex: '#1F2A44', gsm: 150 },
+    { id: 'linen-sand', name: 'Linen Sand', hex: '#E6D8C4', gsm: 135 },
+    { id: 'satin-black', name: 'Satin Black', hex: '#0F1115', gsm: 130 },
+  ]), [])
+  const styles = useMemo(() => ([
+    { id: 'single-1', name: 'Single-breasted 1 button' },
+    { id: 'single-2', name: 'Single-breasted 2 buttons' },
+    { id: 'double-4', name: 'Double-breasted 4 buttons' },
+    { id: 'double-6', name: 'Double-breasted 6 buttons' },
+    { id: 'mandarin', name: 'Mandarin' },
+  ]), [])
+  const accents = useMemo(() => ([
+    { id: 'buttons-brown', name: 'Buttons: Brown' },
+    { id: 'buttons-navy', name: 'Buttons: Navy Blue' },
+    { id: 'buttons-gold', name: 'Buttons: Shiny Gold' },
+    { id: 'thread-white', name: 'Thread: Off-White' },
+    { id: 'pocket-square', name: 'Pocket Square' },
+  ]), [])
+
+  // Initialize from URL
+  useEffect(() => {
+    const g = search.get('garment')
+    const f = search.get('fabric')
+    if (g) setSelectedGarment(g)
+    if (f) setSelectedFabric(f)
+    if (g || f) setCurrentStep(2) // jump to fabric step if arriving from category
+  }, [search])
+
   const handleGarmentSelect = (garmentId: string) => {
     setSelectedGarment(garmentId)
   }
 
   const handleContinue = () => {
-    if (selectedGarment) {
-      // Navigate to next step or fabric selection
-      console.log('Selected garment:', selectedGarment)
-      // For now, just show an alert
-      alert(`Selected: ${selectedGarment}. Next step would be fabric selection.`)
-    }
+    if (!selectedGarment) return
+    setCurrentStep(2)
   }
 
   const getSelectedGarment = () => {
@@ -142,12 +176,12 @@ export default function DesignPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-background py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-6">
-            <Link href="/" className="flex items-center text-gray-600 hover:text-primary transition-colors">
+            <Link href="/" className="flex items-center text-muted-foreground hover:text-primary transition-colors">
               <ArrowLeftIcon className="h-5 w-5 mr-2" />
               {language === 'en' ? 'Back to Home' : 'হোমে ফিরুন'}
             </Link>
@@ -159,53 +193,65 @@ export default function DesignPage() {
             </Button>
           </div>
           
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent mb-4">
             {currentContent.title}
           </h1>
-          <p className="text-xl text-gray-600">
+          <p className="text-xl text-muted-foreground">
             {currentContent.subtitle}
           </p>
         </div>
 
-        {/* Progress Steps */}
-        <div className="mb-8">
-          <div className="flex items-center justify-center space-x-4">
-            {[1, 2, 3, 4, 5].map((step) => (
-              <div key={step} className="flex items-center">
-                <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 ${
-                  step === currentStep 
-                    ? 'border-primary bg-primary text-white' 
-                    : step < currentStep 
-                    ? 'border-primary bg-primary text-white' 
-                    : 'border-gray-300 bg-white text-gray-400'
-                }`}>
-                  {step < currentStep ? (
-                    <CheckIcon className="h-6 w-6" />
-                  ) : (
-                    <span className="font-semibold">{step}</span>
-                  )}
-                </div>
-                {step < 5 && (
-                  <div className={`w-12 h-0.5 mx-2 ${
-                    step < currentStep ? 'bg-primary' : 'bg-gray-300'
-                  }`} />
+        {/* Designer Layout */}
+        {currentStep >= 2 && (
+          <div className="grid grid-cols-12 gap-6">
+            {/* Left sidebar */}
+            <aside className="col-span-12 md:col-span-3 lg:col-span-3 bg-card rounded-xl border border-primary/20 p-4 h-fit sticky top-4">
+              <nav className="space-y-2">
+                {['fabric','style','accents'].map((tab, idx) => {
+                  const stepIndex = (idx + 2) as 2 | 3 | 4
+                  const active = currentStep === stepIndex
+                  return (
+                    <button
+                      key={tab}
+                      onClick={() => setCurrentStep(stepIndex)}
+                      className={`w-full text-left px-4 py-3 rounded-lg font-bold uppercase tracking-wide transition-all ${active ? 'bg-primary text-primary-foreground' : 'bg-secondary text-foreground hover:bg-secondary/70'}`}
+                    >
+                      {tab === 'fabric' && (language === 'en' ? 'Fabric' : 'কাপড়')}
+                      {tab === 'style' && (language === 'en' ? 'Style' : 'স্টাইল')}
+                      {tab === 'accents' && (language === 'en' ? 'Accents' : 'অ্যাকসেন্টস')}
+                    </button>
+                  )
+                })}
+              </nav>
+            </aside>
+
+            {/* Center preview */}
+            <section className="col-span-12 md:col-span-6 lg:col-span-6 bg-card rounded-xl border border-primary/20 p-6 flex flex-col items-center justify-center">
+              <div className="w-full max-w-md aspect-[3/4] bg-gradient-to-b from-secondary to-background rounded-xl flex items-center justify-center relative">
+                <div className="text-[140px] select-none">{selectedGarment === 'shirt' ? '👔' : selectedGarment === 'blazer' ? '🧥' : '🤵'}</div>
+                {selectedFabric && (
+                  <div className="absolute bottom-4 right-4 text-xs px-3 py-1 rounded-full bg-secondary border border-primary/30 text-muted-foreground">
+                    {selectedFabric}
+                  </div>
                 )}
               </div>
-            ))}
-          </div>
-          <div className="text-center mt-4">
-            <p className="text-lg font-semibold text-gray-900">
-              {language === 'en' ? `Step ${currentStep}: ` : `ধাপ ${currentStep}: `}
-              {currentStep === 1 && currentContent.step1}
-              {currentStep === 2 && currentContent.step2}
-              {currentStep === 3 && currentContent.step3}
-              {currentStep === 4 && currentContent.step4}
-              {currentStep === 5 && currentContent.step5}
-            </p>
-          </div>
-        </div>
+            </section>
 
-        {/* Garment Selection */}
+            {/* Right summary */}
+            <aside className="col-span-12 md:col-span-3 lg:col-span-3 bg-card rounded-xl border border-primary/20 p-4 h-fit sticky top-4">
+              <div className="space-y-3">
+                <h3 className="text-lg font-bold">Your {selectedGarment ?? 'garment'}</h3>
+                <div className="text-sm text-muted-foreground">Base price shown; options may add cost.</div>
+                <div className="text-sm"><span className="font-semibold">Fabric:</span> {selectedFabric ?? '—'}</div>
+                <div className="text-sm"><span className="font-semibold">Style:</span> {selectedStyle ?? '—'}</div>
+                <div className="text-sm"><span className="font-semibold">Accents:</span> {selectedAccent ?? '—'}</div>
+                <Button className="w-full mt-2" onClick={() => setCurrentStep((s) => (s < 4 ? ((s + 1) as any) : s))}>next</Button>
+              </div>
+            </aside>
+          </div>
+        )}
+
+        {/* Step 1 - Garment Selection */}
         {currentStep === 1 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {garmentOptions.map((garment) => (
@@ -218,8 +264,8 @@ export default function DesignPage() {
                 }`}
                 onClick={() => handleGarmentSelect(garment.id)}
               >
-                <div className="aspect-[3/4] bg-gradient-to-br from-gray-100 to-gray-200 relative overflow-hidden">
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-100 to-indigo-200 flex items-center justify-center">
+                <div className="aspect-[3/4] bg-gradient-to-br from-secondary to-muted relative overflow-hidden">
+                  <div className="absolute inset-0 flex items-center justify-center">
                     <div className="text-6xl opacity-20">
                       {garment.id === 'shirt' && '👔'}
                       {garment.id === 'suit' && '🤵'}
@@ -240,16 +286,16 @@ export default function DesignPage() {
                 </div>
                 
                 <CardContent className="p-6">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  <h3 className="text-xl font-semibold text-foreground mb-2">
                     {language === 'en' ? garment.name : garment.nameBn}
                   </h3>
-                  <p className="text-gray-600 mb-4">
+                  <p className="text-muted-foreground mb-4">
                     {language === 'en' ? garment.description : garment.descriptionBn}
                   </p>
                   
                   <div className="flex justify-between items-center mb-4">
                     <div>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-muted-foreground">
                         {currentContent.basePrice}
                       </p>
                       <p className="text-lg font-bold text-primary">
@@ -257,10 +303,10 @@ export default function DesignPage() {
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-muted-foreground">
                         {currentContent.estimatedTime}
                       </p>
-                      <p className="text-sm font-medium text-gray-700">
+                      <p className="text-sm font-medium text-foreground">
                         {garment.estimatedTime}
                       </p>
                     </div>
@@ -295,27 +341,47 @@ export default function DesignPage() {
           </div>
         )}
 
-        {/* Selected Garment Summary */}
-        {selectedGarment && (
+        {/* Steps 2-4 content grids */}
+        {currentStep === 2 && (
           <div className="mt-8">
-            <Card className="bg-primary/5 border-primary/20">
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-4">
-                  <ScissorsIcon className="h-8 w-8 text-primary" />
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      {language === 'en' ? 'Selected:' : 'নির্বাচিত:'} {getSelectedGarment()?.name}
-                    </h3>
-                    <p className="text-gray-600">
-                      {language === 'en' 
-                        ? `Starting from ৳${getSelectedGarment()?.basePrice.toLocaleString()} • ${getSelectedGarment()?.estimatedTime}`
-                        : `৳${getSelectedGarment()?.basePrice.toLocaleString()} থেকে শুরু • ${getSelectedGarment()?.estimatedTime}`
-                      }
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <h3 className="text-xl font-bold mb-4">{language === 'en' ? 'Choose Fabric' : 'কাপড় বাছাই করুন'}</h3>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+              {fabrics.map(f => (
+                <button key={f.id} onClick={() => setSelectedFabric(f.id)} className={`p-3 rounded-xl border ${selectedFabric === f.id ? 'border-primary' : 'border-primary/20'} bg-card shadow-elegant text-left`}>
+                  <div className="aspect-square rounded-lg mb-2 border" style={{ backgroundColor: f.hex }}></div>
+                  <div className="text-sm font-semibold text-foreground">{f.name}</div>
+                  <div className="text-xs text-muted-foreground">{f.gsm} GSM</div>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {currentStep === 3 && (
+          <div className="mt-8">
+            <h3 className="text-xl font-bold mb-4">{language === 'en' ? 'Choose Style' : 'স্টাইল বাছাই করুন'}</h3>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+              {styles.map(s => (
+                <button key={s.id} onClick={() => setSelectedStyle(s.id)} className={`p-4 rounded-xl border ${selectedStyle === s.id ? 'border-primary' : 'border-primary/20'} bg-card shadow-elegant text-left`}>
+                  <div className="text-5xl mb-2 select-none">🧥</div>
+                  <div className="text-sm font-semibold text-foreground">{s.name}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {currentStep === 4 && (
+          <div className="mt-8">
+            <h3 className="text-xl font-bold mb-4">{language === 'en' ? 'Choose Accents' : 'অ্যাকসেন্টস বাছাই করুন'}</h3>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+              {accents.map(a => (
+                <button key={a.id} onClick={() => setSelectedAccent(a.id)} className={`p-4 rounded-xl border ${selectedAccent === a.id ? 'border-primary' : 'border-primary/20'} bg-card shadow-elegant text-left`}>
+                  <div className="text-5xl mb-2 select-none">🪡</div>
+                  <div className="text-sm font-semibold text-foreground">{a.name}</div>
+                </button>
+              ))}
+            </div>
           </div>
         )}
       </div>

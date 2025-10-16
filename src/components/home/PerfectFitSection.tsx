@@ -34,7 +34,7 @@ export default function PerfectFitSection({ language = 'en' }: PerfectFitSection
   const currentContent = content[language]
 
   return (
-    <section className="py-24 bg-gradient-to-br from-orange-50 via-red-50 to-pink-50 relative overflow-hidden">
+    <section className="py-24 bg-gradient-to-br from-secondary via-background to-secondary relative overflow-hidden">
       {/* Decorative elements */}
       <div className="absolute bottom-0 left-0 w-80 h-80 bg-orange-200 rounded-full blur-3xl opacity-30"></div>
       <div className="absolute top-20 right-20 w-64 h-64 bg-pink-200 rounded-full blur-3xl opacity-30"></div>
@@ -67,7 +67,7 @@ export default function PerfectFitSection({ language = 'en' }: PerfectFitSection
             <div className="inline-block px-4 py-2 bg-orange-100 text-orange-700 rounded-full text-sm font-semibold mb-6">
               Perfect Fit Guarantee
             </div>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-400 mb-6 leading-tight">
               {currentContent.title}
             </h2>
             <p className="text-xl text-gray-700 mb-10 leading-relaxed">

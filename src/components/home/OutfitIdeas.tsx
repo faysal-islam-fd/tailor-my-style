@@ -61,7 +61,7 @@ export default function OutfitIdeas({ language = 'en' }: OutfitIdeasProps) {
               {currentContent.subtitle}
             </p>
           </div>
-          <Button variant="outline" className="bg-white text-gray-900 hover:bg-gray-100 hidden md:block">
+          <Button variant="outline" className="hidden md:block">
             {currentContent.viewAll}
           </Button>
         </div>
@@ -96,13 +96,13 @@ export default function OutfitIdeas({ language = 'en' }: OutfitIdeasProps) {
           {/* Navigation Buttons */}
           <button
             onClick={prevSlide}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white text-gray-900 rounded-full p-2 shadow-lg hover:bg-gray-100 transition-colors"
+            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-primary text-primary-foreground rounded-full p-2 shadow-elegant hover:bg-accent transition-all duration-300 hover:scale-110"
           >
             <ChevronLeftIcon className="h-6 w-6" />
           </button>
           <button
             onClick={nextSlide}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white text-gray-900 rounded-full p-2 shadow-lg hover:bg-gray-100 transition-colors"
+            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-primary text-primary-foreground rounded-full p-2 shadow-elegant hover:bg-accent transition-all duration-300 hover:scale-110"
           >
             <ChevronRightIcon className="h-6 w-6" />
           </button>
@@ -110,7 +110,7 @@ export default function OutfitIdeas({ language = 'en' }: OutfitIdeasProps) {
 
         {/* Mobile View All Button */}
         <div className="mt-8 text-center md:hidden">
-          <Button variant="outline" className="bg-white text-gray-900 hover:bg-gray-100">
+          <Button variant="outline">
             {currentContent.viewAll}
           </Button>
         </div>

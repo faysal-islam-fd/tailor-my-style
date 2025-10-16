@@ -32,34 +32,46 @@ export default function BespokeCategories({ language = 'en' }: BespokeCategories
   const currentContent = content[language]
 
   return (
-    <section className="py-20 bg-gradient-to-b from-white to-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-24 bg-gradient-to-b from-background to-secondary relative overflow-hidden">
+      {/* Premium background decoration */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-primary rounded-full blur-3xl"></div>
+      </div>
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent mb-6">
             {currentContent.title}
           </h2>
-          <div className="w-24 h-1 bg-primary mx-auto rounded-full"></div>
+          <div className="flex items-center justify-center gap-3">
+            <div className="h-[2px] w-20 bg-gradient-to-r from-transparent to-primary"></div>
+            <div className="w-2 h-2 rounded-full bg-primary"></div>
+            <div className="h-[2px] w-20 bg-gradient-to-l from-transparent to-primary"></div>
+          </div>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-8">
           {currentContent.categories.map((category, index) => (
             <Link key={index} href={category.href}>
-              <Card className="group overflow-hidden cursor-pointer hover:shadow-elegant-hover transition-all duration-500 border-0 shadow-elegant">
+              <Card className="group overflow-hidden cursor-pointer hover:shadow-elegant-hover transition-all duration-500 shadow-elegant border border-primary/20 hover:border-primary/50 relative">
+                {/* Premium corner accent */}
+                <div className="absolute top-0 right-0 w-12 h-12 bg-gradient-to-br from-primary/30 to-transparent rounded-bl-full z-10"></div>
+                
                 <div className="aspect-[3/4] relative overflow-hidden">
                   {/* Category Image */}
                   <div 
                     className="absolute inset-0 bg-cover bg-center group-hover:scale-110 transition-transform duration-700"
                     style={{ backgroundImage: `url(${category.image})` }}
                   >
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent group-hover:from-black/80 transition-all duration-500"></div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent group-hover:from-background/90 transition-all duration-500"></div>
                   </div>
                   
                   {/* Category Name */}
-                  <div className="absolute bottom-0 left-0 right-0 p-4">
-                    <h3 className="text-white text-lg md:text-xl font-bold text-center group-hover:scale-110 transition-transform duration-300">
+                  <div className="absolute bottom-0 left-0 right-0 p-5">
+                    <h3 className="text-foreground text-lg md:text-xl font-bold text-center group-hover:text-primary group-hover:scale-105 transition-all duration-300">
                       {category.name}
                     </h3>
-                    <div className="h-0.5 w-0 bg-white mx-auto mt-2 group-hover:w-16 transition-all duration-300"></div>
+                    <div className="h-[2px] w-0 bg-gradient-to-r from-primary to-accent mx-auto mt-3 group-hover:w-16 transition-all duration-300 rounded-full"></div>
                   </div>
                 </div>
               </Card>

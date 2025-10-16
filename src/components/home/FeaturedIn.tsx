@@ -21,9 +21,9 @@ export default function FeaturedIn({ language = 'en' }: FeaturedInProps) {
   ]
 
   return (
-    <section className="py-16 bg-gradient-to-r from-gray-50 to-white border-y border-gray-200">
+    <section className="py-16 bg-gradient-to-r from-secondary to-background border-y border-primary/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <p className="text-center text-sm text-gray-500 uppercase tracking-[0.2em] font-semibold mb-10">
+        <p className="text-center text-sm text-muted-foreground uppercase tracking-[0.2em] font-semibold mb-10">
           {currentContent.title}
         </p>
         <div className="flex flex-wrap justify-center items-center gap-12 md:gap-16">

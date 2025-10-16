@@ -62,72 +62,86 @@ export default function Footer({ language = 'en' }: FooterProps) {
   const content = footerContent[language]
 
   return (
-    <footer className="bg-gray-900 text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+    <footer className="bg-[#070A1E] text-foreground border-t border-primary/20 relative">
+      {/* Premium top accent line */}
+      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent"></div>
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           {/* Company Info */}
           <div className="col-span-1 md:col-span-1">
-            <div className="mb-4">
-              <span className="text-3xl font-black text-white" style={{ fontFamily: 'serif' }}>
+            <div className="mb-6">
+              <span className="text-4xl font-black bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent" style={{ fontFamily: 'serif' }}>
                 sailor
               </span>
             </div>
-            <p className="text-gray-400 text-sm mb-4">
+            <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
               {content.madeIn}
             </p>
+            <div className="flex gap-4 mt-6">
+              <div className="w-10 h-10 rounded-full bg-secondary border border-primary/30 flex items-center justify-center hover:bg-primary hover:border-primary transition-all duration-300 cursor-pointer group">
+                <span className="text-primary group-hover:text-primary-foreground transition-colors">f</span>
+              </div>
+              <div className="w-10 h-10 rounded-full bg-secondary border border-primary/30 flex items-center justify-center hover:bg-primary hover:border-primary transition-all duration-300 cursor-pointer group">
+                <span className="text-primary group-hover:text-primary-foreground transition-colors">𝕏</span>
+              </div>
+              <div className="w-10 h-10 rounded-full bg-secondary border border-primary/30 flex items-center justify-center hover:bg-primary hover:border-primary transition-all duration-300 cursor-pointer group">
+                <span className="text-primary group-hover:text-primary-foreground transition-colors">in</span>
+              </div>
+            </div>
           </div>
 
           {/* Company Links */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider mb-4">
+            <h3 className="text-sm font-bold uppercase tracking-wider mb-6 text-primary">
               {content.company}
             </h3>
-            <ul className="space-y-2">
-              <li><Link href="/about" className="text-gray-400 hover:text-white transition-colors">{content.about}</Link></li>
-              <li><Link href="/careers" className="text-gray-400 hover:text-white transition-colors">{content.careers}</Link></li>
-              <li><Link href="/press" className="text-gray-400 hover:text-white transition-colors">{content.press}</Link></li>
+            <ul className="space-y-3">
+              <li><Link href="/about" className="text-muted-foreground hover:text-primary transition-colors duration-300 flex items-center gap-2 group"><span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>{content.about}</Link></li>
+              <li><Link href="/careers" className="text-muted-foreground hover:text-primary transition-colors duration-300 flex items-center gap-2 group"><span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>{content.careers}</Link></li>
+              <li><Link href="/press" className="text-muted-foreground hover:text-primary transition-colors duration-300 flex items-center gap-2 group"><span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>{content.press}</Link></li>
             </ul>
           </div>
 
           {/* Support Links */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider mb-4">
+            <h3 className="text-sm font-bold uppercase tracking-wider mb-6 text-primary">
               {content.support}
             </h3>
-            <ul className="space-y-2">
-              <li><Link href="/help" className="text-gray-400 hover:text-white transition-colors">{content.help}</Link></li>
-              <li><Link href="/contact" className="text-gray-400 hover:text-white transition-colors">{content.contact}</Link></li>
-              <li><Link href="/shipping" className="text-gray-400 hover:text-white transition-colors">{content.shipping}</Link></li>
-              <li><Link href="/returns" className="text-gray-400 hover:text-white transition-colors">{content.returns}</Link></li>
+            <ul className="space-y-3">
+              <li><Link href="/help" className="text-muted-foreground hover:text-primary transition-colors duration-300 flex items-center gap-2 group"><span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>{content.help}</Link></li>
+              <li><Link href="/contact" className="text-muted-foreground hover:text-primary transition-colors duration-300 flex items-center gap-2 group"><span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>{content.contact}</Link></li>
+              <li><Link href="/shipping" className="text-muted-foreground hover:text-primary transition-colors duration-300 flex items-center gap-2 group"><span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>{content.shipping}</Link></li>
+              <li><Link href="/returns" className="text-muted-foreground hover:text-primary transition-colors duration-300 flex items-center gap-2 group"><span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>{content.returns}</Link></li>
             </ul>
           </div>
 
           {/* Product Links */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider mb-4">
+            <h3 className="text-sm font-bold uppercase tracking-wider mb-6 text-primary">
               {content.product}
             </h3>
-            <ul className="space-y-2">
-              <li><Link href="/design" className="text-gray-400 hover:text-white transition-colors">{content.design}</Link></li>
-              <li><Link href="/fabrics" className="text-gray-400 hover:text-white transition-colors">{content.fabrics}</Link></li>
-              <li><Link href="/tailors" className="text-gray-400 hover:text-white transition-colors">{content.tailors}</Link></li>
-              <li><Link href="/sizing" className="text-gray-400 hover:text-white transition-colors">{content.sizing}</Link></li>
+            <ul className="space-y-3">
+              <li><Link href="/design" className="text-muted-foreground hover:text-primary transition-colors duration-300 flex items-center gap-2 group"><span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>{content.design}</Link></li>
+              <li><Link href="/fabrics" className="text-muted-foreground hover:text-primary transition-colors duration-300 flex items-center gap-2 group"><span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>{content.fabrics}</Link></li>
+              <li><Link href="/tailors" className="text-muted-foreground hover:text-primary transition-colors duration-300 flex items-center gap-2 group"><span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>{content.tailors}</Link></li>
+              <li><Link href="/sizing" className="text-muted-foreground hover:text-primary transition-colors duration-300 flex items-center gap-2 group"><span className="opacity-0 group-hover:opacity-100 transition-opacity">→</span>{content.sizing}</Link></li>
             </ul>
           </div>
         </div>
 
         {/* Newsletter Section */}
-        <div className="border-t border-gray-800 mt-8 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
+        <div className="border-t border-primary/20 mt-12 pt-10">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
             <div className="mb-4 md:mb-0">
-              <h3 className="text-lg font-semibold mb-2">{content.newsletter}</h3>
-              <p className="text-gray-400 text-sm">{content.newsletterDesc}</p>
+              <h3 className="text-xl font-bold mb-3 text-primary">{content.newsletter}</h3>
+              <p className="text-muted-foreground text-sm max-w-md leading-relaxed">{content.newsletterDesc}</p>
             </div>
             <div className="flex w-full md:w-auto">
               <input
                 type="email"
                 placeholder={language === 'en' ? 'Enter your email' : 'আপনার ইমেইল লিখুন'}
-                className="flex-1 md:w-64 px-4 py-2 bg-gray-800 border border-gray-700 rounded-l-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                className="flex-1 md:w-72 px-5 py-3 bg-secondary border-2 border-border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary text-foreground placeholder:text-muted-foreground transition-all duration-300"
               />
               <Button className="rounded-l-none">
                 {content.subscribe}
@@ -137,19 +151,19 @@ export default function Footer({ language = 'en' }: FooterProps) {
         </div>
 
         {/* Bottom Section */}
-        <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <div className="flex space-x-6 mb-4 md:mb-0">
-            <Link href="/privacy" className="text-gray-400 hover:text-white text-sm transition-colors">
+        <div className="border-t border-primary/20 mt-10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="flex space-x-8 mb-4 md:mb-0">
+            <Link href="/privacy" className="text-muted-foreground hover:text-primary text-sm transition-colors duration-300 font-medium">
               {content.privacy}
             </Link>
-            <Link href="/terms" className="text-gray-400 hover:text-white text-sm transition-colors">
+            <Link href="/terms" className="text-muted-foreground hover:text-primary text-sm transition-colors duration-300 font-medium">
               {content.terms}
             </Link>
-            <Link href="/cookies" className="text-gray-400 hover:text-white text-sm transition-colors">
+            <Link href="/cookies" className="text-muted-foreground hover:text-primary text-sm transition-colors duration-300 font-medium">
               {content.cookies}
             </Link>
           </div>
-          <p className="text-gray-400 text-sm">{content.copyright}</p>
+          <p className="text-muted-foreground text-sm font-medium">{content.copyright}</p>
         </div>
       </div>
     </footer>

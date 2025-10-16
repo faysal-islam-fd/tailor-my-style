@@ -104,10 +104,9 @@ export default function HeroSection({ language = 'en' }: HeroSectionProps) {
             </p>
             
             {/* CTA Buttons */}
-            <div className="flex flex-wrap gap-4 animate-fade-in-delay-2">
+            <div className="flex flex-wrap gap-6 animate-fade-in-delay-2">
               <Button 
                 size="lg" 
-                className="bg-white text-gray-900 hover:bg-gray-100 font-semibold px-8 py-6 text-lg shadow-lg transition-all duration-300 hover:scale-105" 
                 asChild
               >
                 <Link href="/design">
@@ -118,11 +117,10 @@ export default function HeroSection({ language = 'en' }: HeroSectionProps) {
               <Button 
                 size="lg" 
                 variant="outline"
-                className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-gray-900 font-semibold px-8 py-6 text-lg shadow-lg transition-all duration-300 hover:scale-105" 
                 asChild
               >
                 <Link href="/products">
-                  View Products
+                  {language === 'en' ? 'View Products' : 'পণ্য দেখুন'}
                 </Link>
               </Button>
             </div>

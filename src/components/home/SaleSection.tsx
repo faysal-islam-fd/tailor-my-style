@@ -152,11 +152,11 @@ export default function SaleSection({ language = 'en' }: SaleSectionProps) {
   }
 
   return (
-    <section className="py-12 bg-white">
+    <section className="py-16 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="flex justify-between items-center mb-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+          <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
             {currentContent.title}
           </h2>
           <Link href="/sale">
@@ -184,12 +184,12 @@ export default function SaleSection({ language = 'en' }: SaleSectionProps) {
                 {/* Wishlist Button */}
                 <button
                   onClick={() => toggleWishlist(product.id)}
-                  className="absolute top-2 right-2 z-10 bg-white rounded-full p-2 shadow-md hover:scale-110 transition-transform"
+                  className="absolute top-2 right-2 z-10 bg-secondary border border-primary/30 rounded-full p-2 shadow-elegant hover:scale-110 hover:bg-primary transition-all duration-300"
                 >
                   {wishlist.includes(product.id) ? (
-                    <HeartIconSolid className="h-5 w-5 text-red-500" />
+                    <HeartIconSolid className="h-5 w-5 text-primary" />
                   ) : (
-                    <HeartIcon className="h-5 w-5 text-gray-600" />
+                    <HeartIcon className="h-5 w-5 text-muted-foreground hover:text-primary" />
                   )}
                 </button>
 

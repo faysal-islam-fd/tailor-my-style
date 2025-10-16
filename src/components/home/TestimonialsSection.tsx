@@ -63,41 +63,53 @@ export default function TestimonialsSection({ language = 'en' }: TestimonialsSec
   const currentContent = content[language]
 
   return (
-    <section className="py-24 bg-gradient-to-b from-white to-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-24 bg-gradient-to-b from-secondary to-background relative overflow-hidden">
+      {/* Premium background decoration */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute top-1/4 left-1/3 w-96 h-96 bg-accent rounded-full blur-3xl"></div>
+      </div>
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-16">
-          <div className="inline-block px-4 py-2 bg-yellow-100 text-yellow-700 rounded-full text-sm font-semibold mb-4">
+          <div className="inline-block px-6 py-2 bg-gradient-to-r from-primary/20 to-accent/20 border border-primary/30 text-primary rounded-full text-sm font-bold mb-6 uppercase tracking-wider">
             Customer Love
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent mb-6">
             {currentContent.title}
           </h2>
-          <div className="w-24 h-1 bg-primary mx-auto rounded-full"></div>
+          <div className="flex items-center justify-center gap-3">
+            <div className="h-[2px] w-20 bg-gradient-to-r from-transparent to-primary"></div>
+            <div className="w-2 h-2 rounded-full bg-primary"></div>
+            <div className="h-[2px] w-20 bg-gradient-to-l from-transparent to-primary"></div>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
           {currentContent.testimonials.map((testimonial, index) => (
             <Card 
               key={index} 
-              className="hover:shadow-elegant-hover transition-all duration-300 border-0 shadow-elegant hover:scale-105 bg-white"
+              className="hover:shadow-elegant-hover transition-all duration-500 shadow-elegant hover:scale-[1.02] bg-gradient-to-br from-card to-secondary border-primary/20 hover:border-primary/40 relative group"
             >
+              {/* Premium corner accent */}
+              <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-br from-primary/20 to-transparent rounded-bl-full"></div>
+              
               <CardContent className="p-8">
                 {/* Rating */}
                 <div className="flex mb-6 gap-1">
                   {[...Array(testimonial.rating)].map((_, i) => (
-                    <StarIcon key={i} className="h-6 w-6 text-yellow-400 drop-shadow-sm" />
+                    <StarIcon key={i} className="h-6 w-6 text-primary drop-shadow-sm" />
                   ))}
                 </div>
 
                 {/* Review Text */}
-                <p className="text-gray-700 mb-6 leading-relaxed text-lg">
+                <p className="text-muted-foreground mb-6 leading-relaxed text-lg">
                   &ldquo;{testimonial.text}&rdquo;
                 </p>
 
                 {/* Author */}
-                <div className="border-t-2 border-gray-100 pt-5">
-                  <p className="font-bold text-gray-900 text-lg">{testimonial.author}</p>
-                  <p className="text-sm text-gray-500 mt-1">{testimonial.date}</p>
+                <div className="border-t-2 border-primary/20 pt-5">
+                  <p className="font-bold text-foreground text-lg">{testimonial.author}</p>
+                  <p className="text-sm text-muted-foreground mt-1">{testimonial.date}</p>
                 </div>
               </CardContent>
             </Card>
@@ -105,7 +117,7 @@ export default function TestimonialsSection({ language = 'en' }: TestimonialsSec
         </div>
 
         <div className="text-center">
-          <Button variant="outline" size="lg" className="border-2 shadow-md hover:shadow-lg">
+          <Button variant="outline" size="lg">
             {currentContent.viewMore}
           </Button>
         </div>

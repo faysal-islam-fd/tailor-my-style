@@ -35,6 +35,15 @@ interface CategoryInfo {
   description: string
   heroImage: string
   products: Product[]
+  fabrics?: {
+    id: number
+    name: string
+    colorName: string
+    hex: string
+    gsm: number
+    composition: string
+    priceFrom: number
+  }[]
 }
 
 const categoryData: Record<string, CategoryInfo> = {
@@ -54,6 +63,16 @@ const categoryData: Record<string, CategoryInfo> = {
       { id: 8, name: 'Lavender', price: 95, image: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400', rating: 4.4, reviewCount: 45, colors: ['#f3e8ff', '#c4b5fd'] },
       { id: 9, name: 'Burgundy', price: 92, image: 'https://images.unsplash.com/photo-1620012253295-c15cc3e65df4?w=400', rating: 4.6, reviewCount: 112, colors: ['#7c2d12', '#dc2626'] },
       { id: 10, name: 'Sage Green', price: 99, image: 'https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=400', rating: 4.7, reviewCount: 78, colors: ['#ecfccb', '#65a30d'] },
+    ],
+    fabrics: [
+      { id: 1, name: 'Oxford', colorName: 'White', hex: '#F5F6F7', gsm: 140, composition: '100% Cotton', priceFrom: 79 },
+      { id: 2, name: 'Poplin', colorName: 'Sky Blue', hex: '#CFE6FF', gsm: 120, composition: '100% Cotton', priceFrom: 79 },
+      { id: 3, name: 'Twill', colorName: 'Navy', hex: '#1F2A44', gsm: 150, composition: '100% Cotton', priceFrom: 89 },
+      { id: 4, name: 'Linen Blend', colorName: 'Sand', hex: '#E6D8C4', gsm: 135, composition: '55% Linen, 45% Cotton', priceFrom: 99 },
+      { id: 5, name: 'Satin', colorName: 'Black', hex: '#0F1115', gsm: 130, composition: 'Cotton-Satin', priceFrom: 89 },
+      { id: 6, name: 'Chambray', colorName: 'Light Indigo', hex: '#8FA6C6', gsm: 125, composition: '100% Cotton', priceFrom: 85 },
+      { id: 7, name: 'Herringbone', colorName: 'Steel', hex: '#AAB2BD', gsm: 155, composition: '100% Cotton', priceFrom: 99 },
+      { id: 8, name: 'Dobby', colorName: 'Rose', hex: '#F4C9D2', gsm: 135, composition: '100% Cotton', priceFrom: 95 }
     ]
   },
   'suits': {
@@ -90,6 +109,9 @@ export default function CategoryPage({ params }: CategoryPageProps) {
   const [wishlist, setWishlist] = useState<number[]>([])
   const [loading, setLoading] = useState(true)
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null)
+  const garmentQueryMap: Record<string, string> = { shirts: 'shirt', suits: 'suit', blazers: 'blazer' }
+  const [fabricSearch, setFabricSearch] = useState('')
+  const [fabricWeight, setFabricWeight] = useState<'all' | 'light' | 'medium' | 'heavy'>('all')
 
   useEffect(() => {
     // Simulate loading
@@ -106,7 +128,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <section className="relative h-[650px] lg:h-[800px] bg-gray-900 overflow-hidden group">
         {/* Background Image with Parallax */}
@@ -173,9 +195,12 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                 <div className="flex flex-col sm:flex-row gap-6 animate-fade-in-delay-2">
                   <Button 
                     size="lg" 
+                    asChild
                     className="px-12 py-8 text-lg font-bold bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 text-white shadow-2xl hover:shadow-primary/25 transition-all duration-500 hover:scale-105 border-0"
                   >
-                    Start Designing
+                    <Link href={`/design?garment=${garmentQueryMap[params.slug] ?? 'shirt'}`}>
+                      Start Designing
+                    </Link>
                   </Button>
                   <Button 
                     size="lg" 
@@ -244,24 +269,58 @@ export default function CategoryPage({ params }: CategoryPageProps) {
         </div>
       </section>
 
+      {/* Fabric Swatch Grid (if fabrics available) */}
+      {category.fabrics && (
+      <section className="py-16 bg-background">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent mb-3">Choose your cloth</h2>
+            <p className="text-muted-foreground">Plain fabrics curated for premium {params.slug}</p>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-5">
+            {category.fabrics.map((fabric) => (
+              <Link key={fabric.id} href={`/design?garment=${garmentQueryMap[params.slug] ?? 'shirt'}&fabric=${fabric.name.toLowerCase().replace(/\s+/g,'-')}-${fabric.colorName.toLowerCase().replace(/\s+/g,'-')}`} className="group">
+                <div className="p-3 rounded-xl border border-primary/20 bg-card shadow-elegant hover:border-primary/40 transition-all duration-300">
+                  <div className="aspect-square rounded-lg border border-border mb-3 overflow-hidden relative">
+                    <div className="absolute inset-0" style={{ backgroundColor: fabric.hex }}></div>
+                    <div className="absolute bottom-2 right-2 text-[10px] px-2 py-0.5 rounded-full bg-secondary/70 border border-primary/30 text-muted-foreground">{fabric.gsm} GSM</div>
+                  </div>
+                  <div className="space-y-1">
+                    <div className="text-sm font-semibold text-foreground">{fabric.colorName}</div>
+                    <div className="text-xs text-muted-foreground">{fabric.name} • {fabric.composition}</div>
+                    <div className="text-xs text-muted-foreground">From ${fabric.priceFrom}</div>
+                  </div>
+                  <div className="mt-3">
+                    <Button size="sm" className="w-full">Use this cloth</Button>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+      )}
+
       {/* Product Grid Section */}
-      <section className="py-16 bg-white">
+      {!category.fabrics && (
+      <section className="py-16 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-3">Our best picks for you</h2>
-            <p className="text-gray-600">Handpicked selection of premium {params.slug}</p>
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent mb-3">Our best picks for you</h2>
+            <p className="text-muted-foreground">Handpicked selection of premium {params.slug}</p>
           </div>
 
           {/* Filter Bar */}
-          <div className="flex justify-between items-center mb-8 pb-4 border-b">
-            <div className="text-sm text-gray-600">
+            <div className="flex justify-between items-center mb-8 pb-4 border-b border-primary/20">
+            <div className="text-sm text-muted-foreground">
               <span className="font-semibold">{category.products.length}</span> products
             </div>
             <div className="flex items-center gap-4">
-              <label className="text-sm text-gray-600">Sort by:</label>
+              <label className="text-sm text-muted-foreground">Sort by:</label>
               <select 
-                className="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                className="border-2 border-border bg-secondary text-foreground rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
               >
@@ -277,9 +336,9 @@ export default function CategoryPage({ params }: CategoryPageProps) {
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 mb-16">
             {category.products.map((product) => (
               <div key={product.id} className="group">
-                <div className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-gray-200">
+                <div className="bg-card rounded-xl overflow-hidden shadow-elegant hover:shadow-elegant-hover transition-all duration-500 border border-primary/20 hover:border-primary/40">
                   {/* Product Image */}
-                  <div className="relative aspect-[3/4] bg-gray-100 overflow-hidden">
+                  <div className="relative aspect-[3/4] bg-secondary overflow-hidden">
                     <Link href={`/product/${product.id}`}>
                       <div 
                         className="absolute inset-0 bg-cover bg-center group-hover:scale-110 transition-transform duration-700 cursor-pointer"
@@ -290,7 +349,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                     {/* Tag */}
                     {product.tag && (
                       <div className={`absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide ${
-                        product.tag === 'new' ? 'bg-green-500 text-white' : 'bg-primary text-white'
+                        product.tag === 'new' ? 'bg-green-600 text-white' : 'bg-primary text-primary-foreground'
                       }`}>
                         {product.tag}
                       </div>
@@ -300,19 +359,19 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                     <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col gap-2">
                       <button
                         onClick={() => toggleWishlist(product.id)}
-                        className="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg"
+                        className="w-10 h-10 bg-secondary/80 border border-primary/30 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors shadow-elegant"
                       >
                         {wishlist.includes(product.id) ? (
-                          <HeartSolidIcon className="w-5 h-5 text-red-500" />
+                          <HeartSolidIcon className="w-5 h-5 text-primary" />
                         ) : (
-                          <HeartIcon className="w-5 h-5 text-gray-600" />
+                          <HeartIcon className="w-5 h-5 text-muted-foreground" />
                         )}
                       </button>
                       <button
                         onClick={() => setQuickViewProduct(product)}
-                        className="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg"
+                        className="w-10 h-10 bg-secondary/80 border border-primary/30 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors shadow-elegant"
                       >
-                        <EyeIcon className="w-5 h-5 text-gray-600" />
+                        <EyeIcon className="w-5 h-5" />
                       </button>
                     </div>
 
@@ -326,9 +385,9 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                   </div>
                   
                   {/* Product Info */}
-                  <div className="p-4">
+                    <div className="p-4">
                     <Link href={`/product/${product.id}`}>
-                      <h3 className="text-sm font-semibold text-gray-900 mb-2 group-hover:text-primary transition-colors line-clamp-2">
+                      <h3 className="text-sm font-semibold text-foreground mb-2 group-hover:text-primary transition-colors line-clamp-2">
                         {product.name}
                       </h3>
                     </Link>
@@ -344,16 +403,16 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                             />
                           ))}
                         </div>
-                        <span className="text-xs text-gray-500 ml-2">({product.reviewCount})</span>
+                        <span className="text-xs text-muted-foreground ml-2">({product.reviewCount})</span>
                       </div>
                     )}
 
                     {/* Price */}
                     <div className="flex items-center justify-between mb-3">
-                      <span className="text-lg font-bold text-gray-900">
+                      <span className="text-lg font-bold text-foreground">
                         ${product.price}
                       </span>
-                      <span className="text-xs text-gray-500">from</span>
+                      <span className="text-xs text-muted-foreground">from</span>
                     </div>
 
                     {/* Color Swatches */}
@@ -362,7 +421,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                         {product.colors.slice(0, 4).map((color, index) => (
                           <div
                             key={index}
-                            className="w-5 h-5 rounded-full border border-gray-300 shadow-sm"
+                            className="w-5 h-5 rounded-full border border-border shadow-sm"
                             style={{ backgroundColor: color }}
                           />
                         ))}
@@ -378,9 +437,10 @@ export default function CategoryPage({ params }: CategoryPageProps) {
           </div>
         </div>
       </section>
+      )}
 
       {/* Lifestyle Section 1 */}
-      <section className="py-0 bg-white">
+      <section className="py-0 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             {/* Image */}
@@ -393,25 +453,25 @@ export default function CategoryPage({ params }: CategoryPageProps) {
             
             {/* Text Content */}
             <div className="lg:pl-12">
-              <h2 className="text-4xl font-bold text-gray-900 mb-6 leading-tight">
+              <h2 className="text-4xl font-bold text-foreground mb-6 leading-tight">
                 Custom Dress Shirts for a Perfect Fit
               </h2>
-              <p className="text-gray-600 mb-6 leading-relaxed">
+              <p className="text-muted-foreground mb-6 leading-relaxed">
                 Our custom dress shirts are made to your exact measurements, ensuring a perfect fit every time. 
                 Choose from over 100 premium fabrics and customize every detail.
               </p>
               <ul className="space-y-3 mb-8">
                 <li className="flex items-start">
                   <span className="text-primary mr-2">✓</span>
-                  <span className="text-gray-700">Made from premium fabrics</span>
+                  <span className="text-muted-foreground">Made from premium fabrics</span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-primary mr-2">✓</span>
-                  <span className="text-gray-700">Tailored to your measurements</span>
+                  <span className="text-muted-foreground">Tailored to your measurements</span>
                 </li>
                 <li className="flex items-start">
                   <span className="text-primary mr-2">✓</span>
-                  <span className="text-gray-700">Customize collars, cuffs, and buttons</span>
+                  <span className="text-muted-foreground">Customize collars, cuffs, and buttons</span>
                 </li>
               </ul>
               <Button size="lg" className="px-8">
@@ -423,7 +483,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
       </section>
 
       {/* More Products Grid */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-secondary">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
             {category.products.slice(0, 5).map((product) => (
@@ -432,18 +492,18 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                 href={`/product/${product.id}`}
                 className="group"
               >
-                <div className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                  <div className="relative aspect-[3/4] bg-gray-100 overflow-hidden">
+                <div className="bg-card rounded-lg overflow-hidden shadow-elegant hover:shadow-elegant-hover transition-shadow border border-primary/20">
+                  <div className="relative aspect-[3/4] bg-secondary overflow-hidden">
                     <div 
                       className="absolute inset-0 bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
                       style={{ backgroundImage: `url(${product.image})` }}
                     ></div>
                   </div>
                   <div className="py-4 px-3">
-                    <h3 className="text-sm font-medium text-gray-900 mb-2">
+                    <h3 className="text-sm font-medium text-foreground mb-2">
                       {product.name}
                     </h3>
-                    <span className="text-base font-bold text-gray-900">
+                    <span className="text-base font-bold text-foreground">
                       ${product.price}
                     </span>
                   </div>
@@ -455,15 +515,15 @@ export default function CategoryPage({ params }: CategoryPageProps) {
       </section>
 
       {/* Lifestyle Section 2 */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             {/* Text Content */}
             <div className="lg:pr-12 order-2 lg:order-1">
-              <h2 className="text-4xl font-bold text-gray-900 mb-6 leading-tight">
+              <h2 className="text-4xl font-bold text-foreground mb-6 leading-tight">
                 Quality Craftsmanship
               </h2>
-              <p className="text-gray-600 mb-6 leading-relaxed">
+              <p className="text-muted-foreground mb-6 leading-relaxed">
                 Every piece is crafted with attention to detail by our expert tailors. We use only the finest 
                 materials and traditional techniques to ensure lasting quality.
               </p>
@@ -484,7 +544,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
       </section>
 
       {/* Final Product Row */}
-      <section className="py-16 bg-white border-t">
+      <section className="py-16 bg-background border-t border-primary/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
             {category.products.slice(5, 10).map((product) => (
@@ -493,18 +553,18 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                 href={`/product/${product.id}`}
                 className="group"
               >
-                <div className="bg-white rounded-lg overflow-hidden">
-                  <div className="relative aspect-[3/4] bg-gray-100 overflow-hidden">
+                <div className="bg-card rounded-lg overflow-hidden border border-primary/20">
+                  <div className="relative aspect-[3/4] bg-secondary overflow-hidden">
                     <div 
                       className="absolute inset-0 bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
                       style={{ backgroundImage: `url(${product.image})` }}
                     ></div>
                   </div>
                   <div className="py-4">
-                    <h3 className="text-sm font-medium text-gray-900 mb-2">
+                    <h3 className="text-sm font-medium text-foreground mb-2">
                       {product.name}
                     </h3>
-                    <span className="text-base font-bold text-gray-900">
+                    <span className="text-base font-bold text-foreground">
                       ${product.price}
                     </span>
                   </div>
@@ -518,17 +578,17 @@ export default function CategoryPage({ params }: CategoryPageProps) {
       {/* Quick View Modal */}
       {quickViewProduct && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+          <div className="bg-card rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-elegant border border-primary/20">
             <div className="relative">
               <button
                 onClick={() => setQuickViewProduct(null)}
-                className="absolute top-4 right-4 z-10 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg"
+                className="absolute top-4 right-4 z-10 w-10 h-10 bg-secondary/80 border border-primary/30 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors shadow-elegant"
               >
                 <XMarkIcon className="w-5 h-5 text-gray-600" />
               </button>
               
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8">
-                <div className="relative aspect-[3/4] bg-gray-100 rounded-xl overflow-hidden">
+                <div className="relative aspect-[3/4] bg-secondary rounded-xl overflow-hidden">
                   <div 
                     className="absolute inset-0 bg-cover bg-center"
                     style={{ backgroundImage: `url(${quickViewProduct.image})` }}
@@ -537,7 +597,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                 
                 <div className="space-y-6">
                   <div>
-                    <h2 className="text-3xl font-bold text-gray-900 mb-2">{quickViewProduct.name}</h2>
+                    <h2 className="text-3xl font-bold text-foreground mb-2">{quickViewProduct.name}</h2>
                     {quickViewProduct.rating && (
                       <div className="flex items-center mb-4">
                         <div className="flex items-center">
@@ -551,7 +611,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                         <span className="text-sm text-gray-500 ml-2">({quickViewProduct.reviewCount} reviews)</span>
                       </div>
                     )}
-                    <div className="text-3xl font-bold text-gray-900 mb-6">
+                    <div className="text-3xl font-bold text-foreground mb-6">
                       ${quickViewProduct.price}
                     </div>
                   </div>
@@ -563,12 +623,12 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                   
                   <div className="space-y-4">
                     <div>
-                      <h4 className="font-semibold text-gray-900 mb-2">Available Colors</h4>
+                      <h4 className="font-semibold text-foreground mb-2">Available Colors</h4>
                       <div className="flex gap-2">
                         {quickViewProduct.colors?.map((color, index) => (
                           <div
                             key={index}
-                            className="w-10 h-10 rounded-full border-2 border-gray-300 shadow-sm hover:border-gray-400 cursor-pointer transition-colors"
+                            className="w-10 h-10 rounded-full border-2 border-border shadow-sm hover:border-primary cursor-pointer transition-colors"
                             style={{ backgroundColor: color }}
                           />
                         ))}

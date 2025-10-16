@@ -48,13 +48,13 @@ export default function Header() {
   ]
 
   return (
-    <header className="bg-white shadow-md sticky top-0 z-50">
+    <header className="bg-card shadow-elegant sticky top-0 z-50 border-b border-primary/20">
       {/* Top Banner */}
-      <div className={`bg-gradient-to-r from-primary to-blue-600 text-white transition-all duration-300 ease-in-out overflow-hidden transform ${
+      <div className={`bg-gradient-to-r from-primary via-accent to-primary text-primary-foreground transition-all duration-300 ease-in-out overflow-hidden transform ${
         isScrolled ? 'max-h-0 py-0 opacity-0 -translate-y-full' : 'max-h-20 py-2.5 opacity-100 translate-y-0'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-xs sm:text-sm font-semibold tracking-wide">
+          <p className="text-center text-xs sm:text-sm font-bold tracking-wider uppercase">
             {language === 'en' 
               ? '✨ Shop Into The Festive Season - Free Shipping On Orders Over $100' 
               : '✨ সেইলরের সাথে উৎসবের মৌসুমে কেনাকাটা করুন - ১০০ ডলারের উপরে ফ্রি শিপিং'}
@@ -63,25 +63,25 @@ export default function Header() {
       </div>
       
       {/* Main Header */}
-      <div className="border-b">
+      <div className="border-b border-primary/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-18 py-4">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <Link href="/" className="flex items-center">
-              <span className="text-3xl font-black text-gray-900" style={{ fontFamily: 'serif' }}>
+            <Link href="/" className="flex items-center group">
+              <span className="text-4xl font-black bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent group-hover:from-accent group-hover:via-primary group-hover:to-accent transition-all duration-300" style={{ fontFamily: 'serif' }}>
                 sailor
               </span>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-8">
+          <nav className="hidden md:flex space-x-1">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-gray-700 hover:text-primary px-3 py-2 text-sm font-medium transition-colors"
+                className="text-muted-foreground hover:text-primary px-4 py-2 text-sm font-bold uppercase tracking-wide transition-all duration-300 hover:bg-primary/10 rounded-lg"
               >
                 {item.name}
               </Link>
@@ -89,13 +89,13 @@ export default function Header() {
           </nav>
 
           {/* Right side actions */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2">
             {/* Language Toggle */}
             <Button
               variant="ghost"
               size="icon"
               onClick={toggleLanguage}
-              className="text-gray-600 hover:text-primary"
+              className="text-muted-foreground hover:text-primary hover:bg-primary/10"
             >
               <LanguageIcon className="h-5 w-5" />
               <span className="sr-only">
@@ -104,13 +104,14 @@ export default function Header() {
             </Button>
 
             {/* Cart */}
-            <Button variant="ghost" size="icon" className="text-gray-600 hover:text-primary">
+            <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-primary hover:bg-primary/10 relative">
               <ShoppingCartIcon className="h-5 w-5" />
+              <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full"></span>
               <span className="sr-only">Shopping cart</span>
             </Button>
 
             {/* User Account */}
-            <Button variant="ghost" size="icon" className="text-gray-600 hover:text-primary">
+            <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-primary hover:bg-primary/10">
               <UserIcon className="h-5 w-5" />
               <span className="sr-only">User account</span>
             </Button>
@@ -119,7 +120,7 @@ export default function Header() {
             <Button
               variant="ghost"
               size="icon"
-              className="md:hidden text-gray-600 hover:text-primary"
+              className="md:hidden text-muted-foreground hover:text-primary hover:bg-primary/10"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               {isMenuOpen ? (
@@ -133,13 +134,13 @@ export default function Header() {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-50 rounded-lg mt-2">
+          <div className="md:hidden pb-4">
+            <div className="px-2 pt-2 pb-3 space-y-2 bg-secondary/50 rounded-lg border border-primary/20">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="text-gray-700 hover:text-primary block px-3 py-2 text-base font-medium"
+                  className="text-muted-foreground hover:text-primary hover:bg-primary/10 block px-4 py-3 text-base font-bold rounded-lg transition-all duration-300"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.name}
@@ -152,37 +153,37 @@ export default function Header() {
       </div>
       
       {/* Secondary Navigation */}
-      <div className="bg-gradient-to-r from-gray-50 to-white border-b border-gray-200">
+      <div className="bg-gradient-to-r from-secondary to-card border-b border-primary/10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-center space-x-6 py-3 text-xs sm:text-sm font-semibold text-gray-700 overflow-x-auto">
-            <Link href="/sailor-service" className="hover:text-primary transition-colors duration-200 whitespace-nowrap">
+          <div className="flex items-center justify-center space-x-6 py-3 text-xs sm:text-sm font-bold text-muted-foreground overflow-x-auto">
+            <Link href="/sailor-service" className="hover:text-primary transition-all duration-300 whitespace-nowrap tracking-wider hover:scale-105">
               {language === 'en' ? 'SAILOR SERVICE' : 'সেইলর সার্ভিস'}
             </Link>
-            <Link href="/new-arrivals" className="hover:text-primary transition-colors duration-200 whitespace-nowrap">
+            <Link href="/new-arrivals" className="hover:text-primary transition-all duration-300 whitespace-nowrap tracking-wider hover:scale-105">
               {language === 'en' ? 'NEW ARRIVALS' : 'নতুন আগমন'}
             </Link>
-            <Link href="/summer-collections" className="hover:text-primary transition-colors duration-200 whitespace-nowrap">
+            <Link href="/summer-collections" className="hover:text-primary transition-all duration-300 whitespace-nowrap tracking-wider hover:scale-105">
               {language === 'en' ? 'SUMMER COLLECTIONS' : 'গ্রীষ্মের সংগ্রহ'}
             </Link>
-            <Link href="/men" className="hover:text-primary transition-colors duration-200 whitespace-nowrap">
+            <Link href="/men" className="hover:text-primary transition-all duration-300 whitespace-nowrap tracking-wider hover:scale-105">
               {language === 'en' ? 'MEN' : 'পুরুষ'}
             </Link>
-            <Link href="/women" className="hover:text-primary transition-colors duration-200 whitespace-nowrap">
+            <Link href="/women" className="hover:text-primary transition-all duration-300 whitespace-nowrap tracking-wider hover:scale-105">
               {language === 'en' ? 'WOMEN' : 'মহিলা'}
             </Link>
-            <Link href="/kids" className="hover:text-primary transition-colors duration-200 whitespace-nowrap">
+            <Link href="/kids" className="hover:text-primary transition-all duration-300 whitespace-nowrap tracking-wider hover:scale-105">
               {language === 'en' ? 'KIDS' : 'শিশু'}
             </Link>
-            <Link href="/wedding" className="hover:text-primary transition-colors duration-200 whitespace-nowrap">
+            <Link href="/wedding" className="hover:text-primary transition-all duration-300 whitespace-nowrap tracking-wider hover:scale-105">
               {language === 'en' ? 'WEDDING' : 'বিবাহ'}
             </Link>
-            <Link href="/footwear" className="hover:text-primary transition-colors duration-200 whitespace-nowrap">
+            <Link href="/footwear" className="hover:text-primary transition-all duration-300 whitespace-nowrap tracking-wider hover:scale-105">
               {language === 'en' ? 'FOOTWEAR' : 'জুতা'}
             </Link>
-            <Link href="/accessories" className="hover:text-primary transition-colors duration-200 whitespace-nowrap">
+            <Link href="/accessories" className="hover:text-primary transition-all duration-300 whitespace-nowrap tracking-wider hover:scale-105">
               {language === 'en' ? 'ACCESSORIES' : 'আনুষাঙ্গিক'}
             </Link>
-            <Link href="/sale" className="hover:text-primary text-red-600 transition-colors duration-200 whitespace-nowrap font-bold">
+            <Link href="/sale" className="hover:text-accent text-primary transition-all duration-300 whitespace-nowrap font-bold tracking-wider hover:scale-110 animate-pulse">
               {language === 'en' ? '🔥 SALE' : '🔥 সেল'}
             </Link>
           </div>
