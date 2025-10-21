@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, use } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { 
@@ -13,9 +13,9 @@ import {
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid'
 
 interface CategoryPageProps {
-  params: {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
 interface Product {
@@ -104,7 +104,8 @@ const categoryData: Record<string, CategoryInfo> = {
 }
 
 export default function CategoryPage({ params }: CategoryPageProps) {
-  const category = categoryData[params.slug] || categoryData['shirts']
+  const unwrappedParams = use(params)
+  const category = categoryData[unwrappedParams.slug] || categoryData['shirts']
   const [sortBy, setSortBy] = useState('featured')
   const [wishlist, setWishlist] = useState<number[]>([])
   const [loading, setLoading] = useState(true)
@@ -198,7 +199,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                     asChild
                     className="px-12 py-8 text-lg font-bold bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 text-white shadow-2xl hover:shadow-primary/25 transition-all duration-500 hover:scale-105 border-0"
                   >
-                    <Link href={`/design?garment=${garmentQueryMap[params.slug] ?? 'shirt'}`}>
+                    <Link href={`/design?garment=${garmentQueryMap[unwrappedParams.slug] ?? 'shirt'}`}>
                       Start Designing
                     </Link>
                   </Button>
@@ -275,12 +276,12 @@ export default function CategoryPage({ params }: CategoryPageProps) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
             <h2 className="text-3xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent mb-3">Choose your cloth</h2>
-            <p className="text-muted-foreground">Plain fabrics curated for premium {params.slug}</p>
+            <p className="text-muted-foreground">Plain fabrics curated for premium {unwrappedParams.slug}</p>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-5">
             {category.fabrics.map((fabric) => (
-              <Link key={fabric.id} href={`/design?garment=${garmentQueryMap[params.slug] ?? 'shirt'}&fabric=${fabric.name.toLowerCase().replace(/\s+/g,'-')}-${fabric.colorName.toLowerCase().replace(/\s+/g,'-')}`} className="group">
+              <Link key={fabric.id} href={`/design?garment=${garmentQueryMap[unwrappedParams.slug] ?? 'shirt'}&fabric=${fabric.name.toLowerCase().replace(/\s+/g,'-')}-${fabric.colorName.toLowerCase().replace(/\s+/g,'-')}`} className="group">
                 <div className="p-3 rounded-xl border border-primary/20 bg-card shadow-elegant hover:border-primary/40 transition-all duration-300">
                   <div className="aspect-square rounded-lg border border-border mb-3 overflow-hidden relative">
                     <div className="absolute inset-0" style={{ backgroundColor: fabric.hex }}></div>
@@ -309,7 +310,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
           {/* Section Header */}
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent mb-3">Our best picks for you</h2>
-            <p className="text-muted-foreground">Handpicked selection of premium {params.slug}</p>
+            <p className="text-muted-foreground">Handpicked selection of premium {unwrappedParams.slug}</p>
           </div>
 
           {/* Filter Bar */}
