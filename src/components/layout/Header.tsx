@@ -111,10 +111,12 @@ export default function Header() {
             </Button>
 
             {/* User Account */}
-            <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-primary hover:bg-primary/10">
-              <UserIcon className="h-5 w-5" />
-              <span className="sr-only">User account</span>
-            </Button>
+            <Link href="/profile">
+              <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-primary hover:bg-primary/10">
+                <UserIcon className="h-5 w-5" />
+                <span className="sr-only">User account</span>
+              </Button>
+            </Link>
 
             {/* Mobile menu button */}
             <Button
