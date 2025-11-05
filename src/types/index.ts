@@ -131,3 +131,29 @@ export interface PaymentMethod {
   nameBn: string
   isActive: boolean
 }
+
+export interface AuthUser {
+  id: number
+  name: string
+  phone: string
+  email?: string
+  gender?: string
+  dob?: string
+}
+
+export interface AuthLoginResponse {
+  success: boolean
+  user: AuthUser
+  access_token: string
+  token_type: 'Bearer'
+}
+
+export interface AuthProfileResponse {
+  success: boolean
+  user: AuthUser
+}
+
+export interface GenericSuccessResponse {
+  success: boolean
+  message: string
+}

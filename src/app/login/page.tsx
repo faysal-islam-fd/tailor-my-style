@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
@@ -10,25 +10,32 @@ import {
   LockClosedIcon,
   UserIcon,
   EyeIcon,
-  EyeSlashIcon
+  EyeSlashIcon,
+  PhoneIcon
 } from '@heroicons/react/24/outline'
+import { useSendOtpMutation, useVerifyOtpMutation } from '@/services/authApi'
+import { useAppDispatch } from '@/lib/store'
+import { setCredentials } from '@/slices/authSlice'
 
 export default function LoginPage() {
   const router = useRouter()
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  })
-  const [showPassword, setShowPassword] = useState(false)
+  const dispatch = useAppDispatch()
+  const [sendOtp, { isLoading: isSending, isSuccess: sendSuccess } ] = useSendOtpMutation()
+  const [verifyOtp, { isLoading: isVerifying } ] = useVerifyOtpMutation()
+  const [phone, setPhone] = useState('')
+  const [otp, setOtp] = useState('')
+  const [step, setStep] = useState<1 | 2>(1)
   const [language, setLanguage] = useState<'en' | 'bn'>('en')
-  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const content = {
     en: {
       title: 'Welcome Back',
       subtitle: 'Sign in to your account to continue',
-      email: 'Email Address',
-      password: 'Password',
+      phone: 'Phone Number',
+      otp: 'Enter OTP',
+      sendOtp: 'Send OTP',
+      verify: 'Verify & Continue',
       showPassword: 'Show password',
       hidePassword: 'Hide password',
       rememberMe: 'Remember me',
@@ -43,8 +50,10 @@ export default function LoginPage() {
     bn: {
       title: 'স্বাগতম',
       subtitle: 'চালিয়ে যেতে আপনার অ্যাকাউন্টে সাইন ইন করুন',
-      email: 'ইমেইল ঠিকানা',
-      password: 'পাসওয়ার্ড',
+      phone: 'ফোন নম্বর',
+      otp: 'ওটিপি লিখুন',
+      sendOtp: 'ওটিপি পাঠান',
+      verify: 'ভেরিফাই ও চালিয়ে যান',
       showPassword: 'পাসওয়ার্ড দেখান',
       hidePassword: 'পাসওয়ার্ড লুকান',
       rememberMe: 'আমাকে মনে রাখুন',
@@ -60,24 +69,31 @@ export default function LoginPage() {
 
   const currentContent = content[language]
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  useEffect(() => {
+    if (sendSuccess) setStep(2)
+  }, [sendSuccess])
+
+  const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsLoading(true)
-    
-    // Simulate API call
-    setTimeout(() => {
-      console.log('Login submitted:', formData)
-      setIsLoading(false)
-      // Redirect to profile after successful login
-      router.push('/profile')
-    }, 1500)
+    setError(null)
+    try {
+      await sendOtp({ phone }).unwrap()
+    } catch (err: any) {
+      setError(err?.data?.message || 'Failed to send OTP')
+    }
   }
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }))
+  const handleVerify = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError(null)
+    try {
+      const res = await verifyOtp({ phone, otp }).unwrap()
+      await fetch('/api/auth/set-token', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token: res.access_token }) })
+      dispatch(setCredentials({ token: res.access_token, user: res.user }))
+      router.push('/profile')
+    } catch (err: any) {
+      setError(err?.data?.message || 'Invalid OTP')
+    }
   }
 
   return (
@@ -123,103 +139,65 @@ export default function LoginPage() {
             <div className="h-[2px] w-12 bg-gradient-to-r from-primary to-accent rounded-full"></div>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-5">
-              {/* Email */}
-              <div>
-                <label htmlFor="email" className="block text-sm font-bold text-foreground mb-2 uppercase tracking-wide">
-                  {currentContent.email}
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <EnvelopeIcon className="h-5 w-5 text-muted-foreground" />
+            {error && (
+              <div className="mb-4 text-sm text-red-600">{error}</div>
+            )}
+            {step === 1 ? (
+              <form onSubmit={handleSendOtp} className="space-y-5">
+                <div>
+                  <label htmlFor="phone" className="block text-sm font-bold text-foreground mb-2 uppercase tracking-wide">
+                    {currentContent.phone}
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <PhoneIcon className="h-5 w-5 text-muted-foreground" />
+                    </div>
+                    <input
+                      type="tel"
+                      id="phone"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      className="w-full pl-10 pr-4 py-3 bg-secondary border-2 border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary text-foreground placeholder:text-muted-foreground transition-all duration-300"
+                      placeholder="+8801700000000"
+                      required
+                    />
                   </div>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="w-full pl-10 pr-4 py-3 bg-secondary border-2 border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary text-foreground placeholder:text-muted-foreground transition-all duration-300"
-                    placeholder="you@example.com"
-                    required
-                  />
                 </div>
-              </div>
-
-              {/* Password */}
-              <div>
-                <label htmlFor="password" className="block text-sm font-bold text-foreground mb-2 uppercase tracking-wide">
-                  {currentContent.password}
-                </label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <LockClosedIcon className="h-5 w-5 text-muted-foreground" />
+                <Button type="submit" className="w-full" size="lg" disabled={isSending}>
+                  {isSending ? (language === 'en' ? 'Sending...' : 'পাঠানো হচ্ছে...') : currentContent.sendOtp}
+                </Button>
+              </form>
+            ) : (
+              <form onSubmit={handleVerify} className="space-y-5">
+                <div>
+                  <label htmlFor="otp" className="block text-sm font-bold text-foreground mb-2 uppercase tracking-wide">
+                    {currentContent.otp}
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <LockClosedIcon className="h-5 w-5 text-muted-foreground" />
+                    </div>
+                    <input
+                      type="text"
+                      id="otp"
+                      value={otp}
+                      onChange={(e) => setOtp(e.target.value)}
+                      className="w-full pl-10 pr-4 py-3 bg-secondary border-2 border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary text-foreground placeholder:text-muted-foreground transition-all duration-300 tracking-widest"
+                      placeholder="123456"
+                      required
+                    />
                   </div>
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    id="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    className="w-full pl-10 pr-12 py-3 bg-secondary border-2 border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary text-foreground placeholder:text-muted-foreground transition-all duration-300"
-                    placeholder="••••••••"
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-muted-foreground hover:text-primary transition-colors"
-                  >
-                    {showPassword ? (
-                      <EyeSlashIcon className="h-5 w-5" />
-                    ) : (
-                      <EyeIcon className="h-5 w-5" />
-                    )}
+                </div>
+                <Button type="submit" className="w-full" size="lg" disabled={isVerifying}>
+                  {isVerifying ? (language === 'en' ? 'Verifying...' : 'যাচাই হচ্ছে...') : currentContent.verify}
+                </Button>
+                <div className="text-center">
+                  <button type="button" className="text-sm text-primary" onClick={() => setStep(1)}>
+                    {language === 'en' ? 'Change phone number' : 'ফোন নম্বর পরিবর্তন করুন'}
                   </button>
                 </div>
-              </div>
-
-              {/* Remember Me & Forgot Password */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <input
-                    id="remember-me"
-                    name="remember-me"
-                    type="checkbox"
-                    className="h-4 w-4 rounded border-border text-primary focus:ring-primary focus:ring-offset-0 cursor-pointer"
-                  />
-                  <label htmlFor="remember-me" className="ml-2 block text-sm text-muted-foreground cursor-pointer">
-                    {currentContent.rememberMe}
-                  </label>
-                </div>
-                <Link 
-                  href="/forgot-password" 
-                  className="text-sm font-bold text-primary hover:text-accent transition-colors"
-                >
-                  {currentContent.forgotPassword}
-                </Link>
-              </div>
-
-              {/* Submit Button */}
-              <Button 
-                type="submit" 
-                className="w-full" 
-                size="lg"
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <span className="flex items-center justify-center">
-                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    {language === 'en' ? 'Signing in...' : 'সাইন ইন হচ্ছে...'}
-                  </span>
-                ) : (
-                  currentContent.signIn
-                )}
-              </Button>
-            </form>
+              </form>
+            )}
 
             {/* Divider */}
             <div className="relative my-6">

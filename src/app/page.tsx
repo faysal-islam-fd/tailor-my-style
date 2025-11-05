@@ -1,4 +1,5 @@
 import HeroSection from '@/components/home/HeroSection'
+import MainCategories from '@/components/home/MainCategories'
 import BespokeCategories from '@/components/home/BespokeCategories'
 import HighTechTailoring from '@/components/home/HighTechTailoring'
 import OutfitIdeas from '@/components/home/OutfitIdeas'
@@ -8,10 +9,12 @@ import PerfectFitSection from '@/components/home/PerfectFitSection'
 import FeaturedIn from '@/components/home/FeaturedIn'
 import TestimonialsSection from '@/components/home/TestimonialsSection'
 
+
 export default function Home() {
   return (
     <>
       <HeroSection />
+      <MainCategories />
       <BespokeCategories />
       <HighTechTailoring />
       <OutfitIdeas />
