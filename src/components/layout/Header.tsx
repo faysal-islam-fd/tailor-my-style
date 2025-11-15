@@ -50,17 +50,7 @@ export default function Header() {
   return (
     <header className="bg-card shadow-elegant sticky top-0 z-50 border-b border-primary/20">
       {/* Top Banner */}
-      <div className={`bg-gradient-to-r from-primary via-accent to-primary text-primary-foreground transition-all duration-300 ease-in-out overflow-hidden transform ${
-        isScrolled ? 'max-h-0 py-0 opacity-0 -translate-y-full' : 'max-h-20 py-2.5 opacity-100 translate-y-0'
-      }`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-xs sm:text-sm font-bold tracking-wider uppercase">
-            {language === 'en' 
-              ? '✨ Shop Into The Festive Season - Free Shipping On Orders Over $100' 
-              : '✨ সেইলরের সাথে উৎসবের মৌসুমে কেনাকাটা করুন - ১০০ ডলারের উপরে ফ্রি শিপিং'}
-          </p>
-        </div>
-      </div>
+    
       
       {/* Main Header */}
       <div className="border-b border-primary/10">
@@ -70,7 +60,7 @@ export default function Header() {
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center group">
               <span className="text-4xl font-black bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent group-hover:from-accent group-hover:via-primary group-hover:to-accent transition-all duration-300" style={{ fontFamily: 'serif' }}>
-                sailor
+                Dorojay Dorji
               </span>
             </Link>
           </div>

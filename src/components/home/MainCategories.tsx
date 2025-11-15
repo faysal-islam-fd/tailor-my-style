@@ -2,7 +2,7 @@
 
 import { Card } from '@/components/ui/card'
 import Link from 'next/link'
-import { useState, type ReactNode } from 'react'
+import { type ReactNode } from 'react'
 import { ChevronRight, User, Users, Baby, Heart } from 'lucide-react'
 
 interface SubCategory {
@@ -23,22 +23,6 @@ interface Category {
 
 const categories: Category[] = [
   {
-    name: 'Men',
-    slug: 'men',
-    icon: <User className="w-8 h-8" />,
-    color: 'from-blue-600 to-blue-400',
-    gradient: 'from-blue-500/20 to-purple-500/20',
-    image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800',
-    subcategories: [
-      { name: 'Suits', href: '/category/men/suits', icon: '👔' },
-      { name: 'Shirts', href: '/category/men/shirts', icon: '👕' },
-      { name: 'Pants', href: '/category/men/pants', icon: '👖' },
-      { name: 'Blazers', href: '/category/men/blazers', icon: '🧥' },
-      { name: 'Coats', href: '/category/men/coats', icon: '🧥' },
-      { name: 'Vests', href: '/category/men/vests', icon: '🦺' },
-    ]
-  },
-  {
     name: 'Women',
     slug: 'women',
     icon: <Users className="w-8 h-8" />,
@@ -52,6 +36,22 @@ const categories: Category[] = [
       { name: 'Pants', href: '/category/women/pants', icon: '👖' },
       { name: 'Blazers', href: '/category/women/blazers', icon: '🧥' },
       { name: 'Coats', href: '/category/women/coats', icon: '🧥' },
+    ]
+  },
+  {
+    name: 'Men',
+    slug: 'men',
+    icon: <User className="w-8 h-8" />,
+    color: 'from-blue-600 to-blue-400',
+    gradient: 'from-blue-500/20 to-purple-500/20',
+    image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800',
+    subcategories: [
+      { name: 'Suits', href: '/category/men/suits', icon: '👔' },
+      { name: 'Shirts', href: '/category/men/shirts', icon: '👕' },
+      { name: 'Pants', href: '/category/men/pants', icon: '👖' },
+      { name: 'Blazers', href: '/category/men/blazers', icon: '🧥' },
+      { name: 'Coats', href: '/category/men/coats', icon: '🧥' },
+      { name: 'Vests', href: '/category/men/vests', icon: '🦺' },
     ]
   },
   {
@@ -87,15 +87,8 @@ const categories: Category[] = [
 ]
 
 export default function MainCategories() {
-  const [hoveredCategory, setHoveredCategory] = useState<string | null>(null)
-
   return (
-    <section className="py-24 bg-gradient-to-b from-background via-secondary/30 to-background relative overflow-hidden">
-      {/* Animated background elements */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent rounded-full blur-3xl animate-pulse delay-1000"></div>
-      </div>
+    <section className="py-24 bg-gradient-to-b from-background via-secondary/30 to-background relative">
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
@@ -118,17 +111,15 @@ export default function MainCategories() {
           {categories.map((category) => (
             <Card
               key={category.slug}
-              className="group relative overflow-hidden cursor-pointer transition-all duration-500 hover:shadow-2xl border-2 border-transparent hover:border-primary/30"
-              onMouseEnter={() => setHoveredCategory(category.slug)}
-              onMouseLeave={() => setHoveredCategory(null)}
+              className="group relative overflow-hidden cursor-pointer transition-shadow duration-150 hover:shadow-lg border border-border"
             >
               {/* Background Image */}
               <div className="absolute inset-0">
                 <div 
-                  className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
+                  className="absolute inset-0 bg-cover bg-center"
                   style={{ backgroundImage: `url(${category.image})` }}
                 />
-                <div className={`absolute inset-0 bg-gradient-to-br ${category.gradient} backdrop-blur-sm`} />
+                <div className={`absolute inset-0 bg-gradient-to-br ${category.gradient}`} />
                 <div className="absolute inset-0 bg-gradient-to-t from-background via-background/95 to-background/70" />
               </div>
 
@@ -136,14 +127,14 @@ export default function MainCategories() {
               <div className="relative p-8 min-h-[400px] flex flex-col">
                 {/* Category Header */}
                 <div className="flex items-center gap-4 mb-6">
-                  <div className={`p-4 rounded-2xl bg-gradient-to-br ${category.color} text-white shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                  <div className={`p-4 rounded-2xl bg-gradient-to-br ${category.color} text-white shadow-md`}>
                     {category.icon}
                   </div>
                   <div>
-                    <h3 className="text-3xl font-bold text-foreground group-hover:text-primary transition-colors duration-300">
+                    <h3 className="text-3xl font-bold text-foreground group-hover:text-primary transition-colors duration-150">
                       {category.name}
                     </h3>
-                    <div className={`h-1 w-0 bg-gradient-to-r ${category.color} rounded-full group-hover:w-full transition-all duration-500 mt-2`} />
+                    <div className={`h-1 w-full bg-gradient-to-r ${category.color} rounded-full mt-2`} />
                   </div>
                 </div>
 
@@ -157,24 +148,15 @@ export default function MainCategories() {
                       <Link
                         key={index}
                         href={subcat.href}
-                        className={`
-                          group/item flex items-center gap-2 p-3 rounded-lg 
-                          bg-background/60 backdrop-blur-sm border border-border/50
-                          hover:bg-primary/10 hover:border-primary/50
-                          transition-all duration-300
-                          ${hoveredCategory === category.slug ? 'translate-x-0 opacity-100' : 'translate-x-2 opacity-80'}
-                        `}
-                        style={{ 
-                          transitionDelay: `${index * 50}ms` 
-                        }}
+                        className="group/item flex items-center gap-2 p-3 rounded-lg bg-background/60 backdrop-blur-sm border border-border/50 hover:bg-primary/10 hover:border-primary/50 transition-colors duration-150"
                       >
-                        <span className="text-2xl group-hover/item:scale-125 transition-transform duration-300">
+                        <span className="text-2xl">
                           {subcat.icon}
                         </span>
-                        <span className="text-sm font-medium text-foreground group-hover/item:text-primary transition-colors">
+                        <span className="text-sm font-medium text-foreground group-hover/item:text-primary transition-colors duration-150">
                           {subcat.name}
                         </span>
-                        <ChevronRight className="w-4 h-4 ml-auto opacity-0 -translate-x-2 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300" />
+                        <ChevronRight className="w-4 h-4 ml-auto opacity-0 group-hover/item:opacity-100 transition-opacity duration-150" />
                       </Link>
                     ))}
                   </div>
@@ -183,15 +165,10 @@ export default function MainCategories() {
                 {/* View All Link */}
                 <Link
                   href={`/category/${category.slug}`}
-                  className={`
-                    mt-6 flex items-center justify-center gap-2 py-3 px-6 rounded-full
-                    bg-gradient-to-r ${category.color} text-white font-semibold
-                    hover:shadow-lg hover:scale-105 transition-all duration-300
-                    group-hover:gap-4
-                  `}
+                  className={`mt-6 flex items-center justify-center gap-2 py-3 px-6 rounded-full bg-gradient-to-r ${category.color} text-white font-semibold hover:opacity-90 transition-opacity duration-150`}
                 >
                   View All {category.name}
-                  <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  <ChevronRight className="w-5 h-5" />
                 </Link>
               </div>
             </Card>

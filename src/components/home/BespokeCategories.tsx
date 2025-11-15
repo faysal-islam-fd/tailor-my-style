@@ -32,11 +32,7 @@ export default function BespokeCategories({ language = 'en' }: BespokeCategories
   const currentContent = content[language]
 
   return (
-    <section className="py-24 bg-gradient-to-b from-background to-secondary relative overflow-hidden">
-      {/* Premium background decoration */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-primary rounded-full blur-3xl"></div>
-      </div>
+    <section className="py-24 bg-gradient-to-b from-background to-secondary relative">
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-16">
@@ -53,25 +49,22 @@ export default function BespokeCategories({ language = 'en' }: BespokeCategories
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-8">
           {currentContent.categories.map((category, index) => (
             <Link key={index} href={category.href}>
-              <Card className="group overflow-hidden cursor-pointer hover:shadow-elegant-hover transition-all duration-500 shadow-elegant border border-primary/20 hover:border-primary/50 relative">
-                {/* Premium corner accent */}
-                <div className="absolute top-0 right-0 w-12 h-12 bg-gradient-to-br from-primary/30 to-transparent rounded-bl-full z-10"></div>
-                
+              <Card className="group overflow-hidden cursor-pointer hover:shadow-md transition-shadow duration-150 shadow-sm border border-border hover:border-primary/30 relative">
                 <div className="aspect-[3/4] relative overflow-hidden">
                   {/* Category Image */}
                   <div 
-                    className="absolute inset-0 bg-cover bg-center group-hover:scale-110 transition-transform duration-700"
+                    className="absolute inset-0 bg-cover bg-center"
                     style={{ backgroundImage: `url(${category.image})` }}
                   >
-                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent group-hover:from-background/90 transition-all duration-500"></div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent"></div>
                   </div>
                   
                   {/* Category Name */}
                   <div className="absolute bottom-0 left-0 right-0 p-5">
-                    <h3 className="text-foreground text-lg md:text-xl font-bold text-center group-hover:text-primary group-hover:scale-105 transition-all duration-300">
+                    <h3 className="text-foreground text-lg md:text-xl font-bold text-center group-hover:text-primary transition-colors duration-150">
                       {category.name}
                     </h3>
-                    <div className="h-[2px] w-0 bg-gradient-to-r from-primary to-accent mx-auto mt-3 group-hover:w-16 transition-all duration-300 rounded-full"></div>
+                    <div className="h-[2px] w-12 bg-gradient-to-r from-primary to-accent mx-auto mt-3 rounded-full"></div>
                   </div>
                 </div>
               </Card>

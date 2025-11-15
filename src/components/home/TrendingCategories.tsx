@@ -39,10 +39,10 @@ export default function TrendingCategories({ language = 'en' }: TrendingCategori
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           {currentContent.categories.map((category, index) => (
             <Link key={index} href={category.href}>
-              <Card className="group overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300">
+              <Card className="group overflow-hidden cursor-pointer hover:shadow-md transition-shadow duration-150 border border-border">
                 <div className="aspect-[3/4] relative overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
                   {/* Placeholder for category image */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 group-hover:scale-110 transition-transform duration-500">
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100">
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="text-6xl opacity-20">
                         {index === 0 && '👕'}
@@ -55,7 +55,7 @@ export default function TrendingCategories({ language = 'en' }: TrendingCategori
                   
                   {/* Category Name Overlay */}
                   <div className="absolute bottom-0 left-0 right-0 bg-white bg-opacity-95 py-4">
-                    <h3 className="text-center text-sm md:text-base font-bold text-gray-900 uppercase tracking-wide">
+                    <h3 className="text-center text-sm md:text-base font-bold text-gray-900 uppercase tracking-wide group-hover:text-primary transition-colors duration-150">
                       {category.name}
                     </h3>
                   </div>
